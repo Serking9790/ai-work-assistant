@@ -6,24 +6,28 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Inserisci qui la tua API Key tra le virgolette
-const genAI = new GoogleGenerativeAI("AIzaSyCGFe5T7F7CZHj6JxnGr1mkr01A6hb_EfI");
+// CONTROLLA CHE QUESTA CHIAVE SIA CORRETTA
+const genAI = new GoogleGenerativeAI("LA_TUA_CHIAVE_QUI");
 
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        
         const result = await model.generateContent(message);
         const response = await result.response;
-        res.json({ reply: response.text() });
+        const text = response.text();
+        
+        // Mandiamo la risposta in modo che l'app la legga sicuramente
+        res.json({ reply: text });
+        
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Errore interno del server" });
+        console.error("Errore Gemini:", error);
+        res.json({ reply: "Errore della chiave API o di Google. Controlla i log su Render!" });
     }
 });
 
-// Questa è la parte fondamentale per Render
 const port = process.env.PORT || 3000;
 app.listen(port, '0.0.0.0', () => {
-    console.log(`Server online sulla porta ${port}`);
+    console.log(`Server online`);
 });
