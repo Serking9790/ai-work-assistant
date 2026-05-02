@@ -10,8 +10,10 @@ const API_KEY = "AIzaSyC0_Ofna61ohDgFQ614i6_2AsLrGyQyxZo";
 
 app.post('/api/chat', async (req, res) => {
     try {
-        // CAMBIATO SOLO IL NOME MODELLO QUI SOTTO
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`, {
+        // VERSIONE v1beta + GEMINI-1.5-FLASH
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -24,11 +26,11 @@ app.post('/api/chat', async (req, res) => {
         if (data.candidates && data.candidates[0].content) {
             res.json({ reply: data.candidates[0].content.parts[0].text });
         } else {
-            // Se c'è un errore, lo leggiamo per intero
-            res.json({ error: "Dettaglio Google: " + JSON.stringify(data) });
+            // Se c'è ancora un errore, stampiamo l'intero oggetto per capire
+            res.json({ error: "Risposta Google: " + JSON.stringify(data) });
         }
     } catch (error) {
-        res.json({ error: error.message });
+        res.json({ error: "Errore Server: " + error.message });
     }
 });
 
