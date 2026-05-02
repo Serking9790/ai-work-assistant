@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 // Assicurati che tra le virgolette ci sia la tua chiave (inizia con AIza...)
-const genAI = new GoogleGenerativeAI("AIzaSyCGFe5T7F7CZHj6JxnGr1mkr01A6hb_EfI");
+const genAI = new GoogleGenerativeAI("AIzaSyC0_Ofna61ohDgFQ614i6_2AsLrGyQyxZo");
 
 app.post('/api/chat', async (req, res) => {
     try {
