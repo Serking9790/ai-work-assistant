@@ -1,7 +1,6 @@
 {
   "name": "ai-work-assistant",
   "version": "1.0.0",
-  "description": "Backend per assistente IA",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
