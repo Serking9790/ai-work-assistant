@@ -6,8 +6,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// CONTROLLA CHE QUESTA CHIAVE SIA CORRETTA
-const genAI = new GoogleGenerativeAI("LA_TUA_CHIAVE_QUI");
+// Assicurati che tra le virgolette ci sia la tua chiave (inizia con AIza...)
+const genAI = new GoogleGenerativeAI("AIzaSyCGFe5T7F7CZHj6JxnGr1mkr01A6hb_EfI");
 
 app.post('/api/chat', async (req, res) => {
     try {
@@ -16,14 +16,16 @@ app.post('/api/chat', async (req, res) => {
         
         const result = await model.generateContent(message);
         const response = await result.response;
-        const text = response.text();
         
-        // Mandiamo la risposta in modo che l'app la legga sicuramente
+        // Questo comando è più robusto per estrarre il testo
+        const text = response.candidates[0].content.parts[0].text;
+        
         res.json({ reply: text });
         
     } catch (error) {
-        console.error("Errore Gemini:", error);
-        res.json({ reply: "Errore della chiave API o di Google. Controlla i log su Render!" });
+        console.error("Errore dettagliato:", error);
+        // Se c'è un errore, lo mandiamo all'app così lo leggi sullo schermo
+        res.json({ reply: "Errore: " + error.message });
     }
 });
 
@@ -31,3 +33,4 @@ const port = process.env.PORT || 3000;
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server online`);
 });
+
